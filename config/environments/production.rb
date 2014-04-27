@@ -13,7 +13,7 @@ KMatch::Application.configure do
     :port                 => 587,
     :domain               => "gmail.com",
     :user_name            => "meetingapp.dev@gmail.com",
-    :password             => "KIEI462buddy",
+    :password             => "",
     :authentication       => "plain",
     :enable_starttls_auto => true
   }
