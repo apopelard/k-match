@@ -10,5 +10,11 @@ class ApplicationController < ActionController::Base
   def configure_permitted_parameters
     devise_parameter_sanitizer.for(:sign_in) << [:email, :first_name, :last_name]
   end
+
+  def after_sign_in_path_for(resource)
+    profile_path
+    resource.admin? ? admin_root_path : profile_path
+  end
+
 end
 

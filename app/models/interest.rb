@@ -1,4 +1,3 @@
 class Interest < ActiveRecord::Base
-  has_many :preferences
-  has_many :users, through: :preferences
+  has_and_belongs_to_many :users
 end

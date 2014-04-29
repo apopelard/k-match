@@ -11,27 +11,40 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140409064622) do
+ActiveRecord::Schema.define(version: 20140428205709) do
 
-  create_table "after_functions", force: true do |t|
-    t.integer "user_id"
-    t.integer "function_id"
+  create_table "active_admin_comments", force: true do |t|
+    t.string   "namespace"
+    t.text     "body"
+    t.string   "resource_id",   null: false
+    t.string   "resource_type", null: false
+    t.integer  "author_id"
+    t.string   "author_type"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
-  create_table "after_industries", force: true do |t|
-    t.integer "user_id"
-    t.integer "industry_id"
+  add_index "active_admin_comments", ["author_type", "author_id"], name: "index_active_admin_comments_on_author_type_and_author_id"
+  add_index "active_admin_comments", ["namespace"], name: "index_active_admin_comments_on_namespace"
+  add_index "active_admin_comments", ["resource_type", "resource_id"], name: "index_active_admin_comments_on_resource_type_and_resource_id"
+
+  create_table "admin_users", force: true do |t|
+    t.string   "email",                  default: "", null: false
+    t.string   "encrypted_password",     default: "", null: false
+    t.string   "reset_password_token"
+    t.datetime "reset_password_sent_at"
+    t.datetime "remember_created_at"
+    t.integer  "sign_in_count",          default: 0,  null: false
+    t.datetime "current_sign_in_at"
+    t.datetime "last_sign_in_at"
+    t.string   "current_sign_in_ip"
+    t.string   "last_sign_in_ip"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
-  create_table "before_functions", force: true do |t|
-    t.integer "user_id"
-    t.integer "function_id"
-  end
-
-  create_table "before_industries", force: true do |t|
-    t.integer "user_id"
-    t.integer "industry_id"
-  end
+  add_index "admin_users", ["email"], name: "index_admin_users_on_email", unique: true
+  add_index "admin_users", ["reset_password_token"], name: "index_admin_users_on_reset_password_token", unique: true
 
   create_table "connections", force: true do |t|
     t.integer  "student_id"
@@ -59,6 +72,12 @@ ActiveRecord::Schema.define(version: 20140409064622) do
 
   create_table "interests", force: true do |t|
     t.string "name"
+    t.string "type_club"
+  end
+
+  create_table "interests_users", force: true do |t|
+    t.integer "user_id"
+    t.integer "interest_id"
   end
 
   create_table "matches", force: true do |t|
@@ -66,13 +85,13 @@ ActiveRecord::Schema.define(version: 20140409064622) do
     t.integer "user_id"
   end
 
-  create_table "preferences", force: true do |t|
-    t.integer "user_id"
-    t.integer "interest_id"
-  end
-
   create_table "programs", force: true do |t|
     t.string "name"
+  end
+
+  create_table "programs_users", force: true do |t|
+    t.integer "program_id"
+    t.integer "user_id"
   end
 
   create_table "users", force: true do |t|
@@ -80,7 +99,6 @@ ActiveRecord::Schema.define(version: 20140409064622) do
     t.string   "last_name"
     t.integer  "user_rights"
     t.integer  "country_id"
-    t.integer  "program_id"
     t.integer  "grad_year"
     t.integer  "contact_count"
     t.string   "email",                  default: "", null: false
@@ -99,6 +117,10 @@ ActiveRecord::Schema.define(version: 20140409064622) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "state"
+    t.integer  "before_industry_id"
+    t.integer  "after_industry_id"
+    t.integer  "before_function_id"
+    t.integer  "after_function_id"
   end
 
   add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
