@@ -1,5 +1,26 @@
 KMatch::Application.routes.draw do
-  root to: 'homes#index'
+
+  devise_for :users
+  ActiveAdmin.routes(self)
+  root to: 'pages#index'
+  # Routes for statics pages
+  get '/community', to: 'pages#community'
+  get '/community_details', to: 'pages#community_details'
+  get '/academics', to: 'pages#academics'
+  get '/vision', to: 'pages#vision'
+  get '/sign_up', to: 'pages#sign_up'
+  get '/sign_up2', to: 'pages#sign_up2'
+  get '/profile-admin', to: 'pages#profile-admin'
+  get '/profile-current', to: 'pages#profile-current'
+  get '/profile-prospect', to: 'pages#profile-prospect'
+  get '/profile-leader', to: 'pages#profile-leader'
+  get '/prospective-intro', to: 'pages#prospective-intro'
+  get '/connect-page', to: 'pages#connect-page'
+  get '/connection-accepted', to: 'pages#connection-accepted'
+  get '/students-search', to: 'pages#students-search'
+  get '/dashboard', to: 'pages#dashboard'
+  get '/alumni', to: 'pages#alumni'
+
   # Routes for the Home resource:
   # CREATE
   get '/homes/new', controller: 'homes', action: 'new', as: 'new_home'
@@ -17,7 +38,7 @@ KMatch::Application.routes.draw do
   delete '/homes/:id', controller: 'homes', action: 'destroy'
   #------------------------------
 
-  devise_for :users
+  
   # Routes for the Match resource:
     # CREATE
   get '/matches/new', controller: 'matches', action: 'new', as: 'new_match'
@@ -213,6 +234,7 @@ KMatch::Application.routes.draw do
   # READ
   get '/users', controller: 'users', action: 'index'
   get '/users/:id', controller: 'users', action: 'show', as: 'user'
+  get '/profile', to: "users#profile"
 
   # UPDATE
   get '/users/:id/edit', controller: 'users', action: 'edit', as: 'edit_user'

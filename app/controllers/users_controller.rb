@@ -1,5 +1,6 @@
 class UsersController < ApplicationController
   before_filter :authenticate_user!
+  before_action :set_states, only: [:edit, :update]
   def index
     @users = User.all
   end
@@ -60,6 +61,44 @@ class UsersController < ApplicationController
 
   def edit
     @user = User.find_by(id: params[:id])
+  end
+
+  def update
+
+    @user = User.find_by(id: params[:id])
+    @user.first_name = params[:first_name]
+    @user.last_name = params[:last_name]
+    @user.user_rights = params[:right].to_i
+    @user.country_id = params[:country_id].to_i
+    @user.state = params[:state]
+    @user.program_ids = params[:user][:program_ids].reject{|id| id == ""}
+    if params[:right].to_i == 1
+      @user.grad_year = params[:email].split('@')[0].reverse[0..3].reverse.to_i
+    end
+
+    @user.before_industry_id = params[:before_industry_id].to_i
+    @user.after_industry_id = params[:after_industry_id].to_i
+
+    @user.before_function_id = params[:before_function_id].to_i
+    @user.after_function_id = params[:after_function_id].to_i
+
+    @user.interest_ids = params[:interest_ids]
+
+    if @user.save
+      redirect_to profile_path, notice: "User updated successfully."
+    else
+      render 'edit'
+    end
+  end
+
+  def destroy
+    @user = User.find_by(id: params[:id])
+    @user.destroy
+
+    redirect_to users_url, notice: "User deleted."
+  end
+
+  def set_states
     @states = [["AL", "Alabama"],
 ["AK", "Alaska"],
 ["AZ", "Arizona"],
@@ -113,85 +152,7 @@ class UsersController < ApplicationController
 ["WY", "Wyoming"]]
   end
 
-  def update
-    @user = User.find_by(id: params[:id])
-    @user.first_name = params[:first_name]
-    @user.last_name = params[:last_name]
-    @user.user_rights = params[:right].to_i
-    @user.country_id = params[:country_id].to_i
-    @user.state = params[:state]
-    @user.program_id = params[:program_id].to_i
-    if params[:right].to_i == 1
-      @user.grad_year = params[:email].split('@')[0].reverse[0..3].reverse.to_i
-    end
-
-    bf_ind = BeforeIndustry.new
-    bf_ind.user_id = current_user.id
-    bf_ind.industry_id = params[:before_industry_id].to_i
-    if bf_ind.save
-    else
-      render 'edit'
-    end
-
-    af_ind = AfterIndustry.new
-    af_ind.user_id = current_user.id
-    af_ind.industry_id = params[:after_industry_id].to_i
-    if af_ind.save
-    else
-      render 'edit'
-    end
-
-    bf_fnc = BeforeFunction.new
-    bf_fnc.user_id = current_user.id
-    bf_fnc.function_id = params[:before_function_id].to_i
-    if bf_fnc.save
-    else
-      render 'edit'
-    end
-
-    af_fnc = AfterFunction.new
-    af_fnc.user_id = current_user.id
-    af_fnc.function_id = params[:after_function_id].to_i
-    if af_fnc.save
-    else
-      render 'edit'
-    end
-
-    int1 = Preference.new
-    int1.user_id = current_user.id
-    int1.interest_id = params[:interest1_id].to_i
-    if int1.save
-    else
-      render 'edit'
-    end
-
-    int2 = Preference.new
-    int2.user_id = current_user.id
-    int2.interest_id = params[:interest2_id].to_i
-    if int2.save
-    else
-      render 'edit'
-    end
-
-    int3 = Preference.new
-    int3.user_id = current_user.id
-    int3.interest_id = params[:interest3_id].to_i
-    if int3.save
-    else
-      render 'edit'
-    end
-
-    if @user.save
-      redirect_to homes_url, notice: "User updated successfully."
-    else
-      render 'edit'
-    end
-  end
-
-  def destroy
-    @user = User.find_by(id: params[:id])
-    @user.destroy
-
-    redirect_to users_url, notice: "User deleted."
+  def profile
+   redirect_to edit_user_path(current_user) unless current_user.first_name
   end
 end
